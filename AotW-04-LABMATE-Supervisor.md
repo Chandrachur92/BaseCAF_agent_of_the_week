@@ -2,7 +2,7 @@
   <img src="images/CAF-AotW-banner.svg" width="100%" alt="CAF AotW banner">
 </p>
 
-# 03/11/2026 &mdash; AotW#9: LABMATE Supervisor &mdash; Multi-Agent Orchestrator for Catalysis Research
+# 03/11/2026 &mdash; AotW#4: LABMATE Supervisor &mdash; Multi-Agent Orchestrator for Catalysis Research
 
 ---
 
@@ -13,7 +13,7 @@ Accelerating catalysis research &mdash; the discovery of materials that drive ch
 The LABMATE Supervisor Agent, developed at Pacific Northwest National Laboratory, addresses this by providing one conversational entry point that orchestrates six specialized agents across the catalysis workflow: literature review, simulation, segmentation, data analysis, hypothesis generation, and uncertainty-guided experiment design. The result is a more continuous research loop where scientists can move from question to evidence to next-step planning in one system.
 
 <p align="center">
-  <img src="images/04-LABMATE/LABMATE_workflow_diagram.png" width="78%" alt="LABMATE end-to-end cloud workflow">
+  <img src="images\04-LABMATE\LABMATE_workflow_diagram.png" width="78%" alt="LABMATE end-to-end cloud workflow">
 </p>
 <p align="center"><em>End-to-end LABMATE workflow, from user interaction to orchestrated agent execution and scientific outputs.</em></p>
 
@@ -44,7 +44,7 @@ Key technologies and frameworks:
 - **Deployment:** AWS with PNNL on-premises authentication gateway
 
 <p align="center">
-  <img src="images/04-LABMATE/LABMATE_arch_horizontal.png" width="85%" alt="LABMATE supervisor and six-agent architecture">
+  <img src="images\04-LABMATE\LABMATE_arch_horizontal.png" width="85%" alt="LABMATE supervisor and six-agent architecture">
 </p>
 <p align="center"><em>LABMATE architecture showing the supervisor-mediated routing pattern across six specialized agents.</em></p>
 
