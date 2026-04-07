@@ -258,9 +258,28 @@ cross-contamination when switching providers.
 
 **Auth:** Globus PKCE flow for ALCF — no stored secrets.
 
-**Project extension model:** Projects are 5-line `main.py` files that opt into overrides
-via boolean flags — `USE_LOCAL_TOOLS`, `USE_LOCAL_AGENT_REGISTRY`, `USE_LOCAL_GRAPH` —
-adding domain tools and agents without touching core framework files.
+**AISAC as a platform for domain AI projects**
+
+A central design goal of AISAC is to serve as a reusable core on which many domain-specific
+AI assistants can be built with minimal effort. The framework provides everything out of the
+box — multi-agent orchestration, RAG, code execution, data analysis, literature search,
+memory, MCP, observability, and a full UI — so domain teams focus entirely on their science,
+not on infrastructure.
+
+A new domain project is a **5-line `main.py`** that calls `aisac.startup.launch()`. Teams
+then opt into only the overrides they need:
+
+| Override file | What it adds | Toggle |
+|---|---|---|
+| `local_tools.py` | Domain-specific tools (e.g. CFD solver calls, materials DB queries) | `USE_LOCAL_TOOLS` |
+| `local_agent_registry.py` | Custom agent prompts or entirely new specialist agents | `USE_LOCAL_AGENT_REGISTRY` |
+| `local_graph.py` | Custom execution graph structure | `USE_LOCAL_GRAPH` |
+
+Domain corpora (PDFs, DOCXs, internal reports) drop into `local_corpus/` and are indexed
+automatically at startup. The AISAC Manager wizard provisions a new project in minutes.
+Active domain projects built on AISAC include combustion CFD assistants, materials science
+agents, and general HPC workflow orchestrators — all sharing the same versioned core with
+zero duplication of framework code.
 
 ---
 
