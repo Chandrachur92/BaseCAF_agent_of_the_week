@@ -223,12 +223,22 @@ lets users browse and resume past sessions backed by the SQLite store.
 
 Getting started requires no terminal knowledge. A single installer file (`install_aisac_manager.bat` on Windows, `install_aisac_manager.sh` on macOS/Linux) auto-discovers Python, clones the repository, creates a virtual environment, installs all dependencies, and places an **AISAC Manager** shortcut on the Desktop — in one step.
 
-From AISAC Manager, researchers can:
-- Create new projects via a **5-step guided wizard** (location, credentials, endpoint preferences, knowledge base folders, feature toggles) — no config file editing required
-- Launch any project into its own **native application window** (pywebview/WebView2)
+Almost everything in AISAC is configurable through one of its two GUIs — no manual config file editing required for typical use:
+
+**AISAC Manager (launcher GUI)** gives researchers full control over project setup and management:
+- Create new projects via a **5-step guided wizard** (location, credentials, endpoint preference order, knowledge base folders, feature toggles)
+- Edit any project's settings at any time through the same wizard
+- Launch projects into their own **native application windows** (pywebview/WebView2)
 - Run **multiple projects simultaneously**, each on its own auto-assigned port
-- Manage credentials centrally (Argo username, AMSC API key) — injected into all projects automatically
-- Check for and apply updates with a single click
+- Manage credentials centrally (Argo username, AMSC API key, ALCF Globus) — injected into all projects automatically, no per-project setup
+- Check for and apply framework updates with a single click
+
+**Main assistant GUI (Gradio)** exposes runtime customizability during live sessions:
+- Upload documents to the knowledge base and trigger re-indexing on the fly
+- Browse, search, and resume past conversation sessions from a sidebar
+- Watch per-agent reasoning live in the Inspector (Router / Planner / Coordinator panes)
+- Stop execution, force early answers, or inject notes into active workflows at any time
+- Switch between conversation modes and adjust assistant behavior through the UI
 
 For HPC and cluster environments, a terminal launcher + SSH tunnel provides the same Gradio interface remotely. Air-gapped deployments are supported via `OFFLINE_MODE` (local models, no outbound calls).
 
