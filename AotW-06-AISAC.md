@@ -281,6 +281,10 @@ Active domain projects built on AISAC include combustion CFD assistants, materia
 agents, and general HPC workflow orchestrators — all sharing the same versioned core with
 zero duplication of framework code.
 
+<p align="center">
+  <img src="images/06-AISAC/aisac_projects.png" width="80%" alt="AISAC Project Specialization Model">
+</p>
+
 ---
 
 ## To Know More
