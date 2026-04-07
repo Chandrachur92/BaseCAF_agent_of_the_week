@@ -174,11 +174,32 @@ Forbidden: `os.system`, `eval`, `exec`, `__import__`, subprocess calls.
 - File read, write, list, search, move, delete (within allowed project scope)
 - Directory listing with metadata
 
-#### MCP (Model Context Protocol)
-- `invoke_mcp_agent` — Discover and call any agent registered in the Academy exchange;
-  long-call timeout (2 hours) to accommodate HPC-backed agents
-- Agent discovery cache refreshed every 180s
-- Parameter schemas extracted automatically from partner docstrings
+#### MCP via Academy Exchange (Model Context Protocol)
+
+AISAC uses the **Academy exchange** — a Globus-authenticated message-passing platform — to
+discover and invoke external agents and tools at runtime. This enables federated scientific
+workflows where specialist agents running on any machine (a laptop, an HPC login node on
+Aurora or Improv, or a partner institution's cluster) register with Academy and become
+immediately callable from within any AISAC session.
+
+**How it works:**
+- Partner agents are written as standard Python classes with a single `@action` method and
+  register themselves with the Academy exchange on startup — no AISAC-specific code required
+  beyond a thin wrapper
+- AISAC's MCP client maintains a persistent session to the Academy-MCP bridge, polls for
+  new agents every 180s, and automatically adds them to the active tool set
+- Cross-identity access is handled via **Globus Groups** — partners and AISAC share a Group
+  UUID; the exchange authorizes communication between different Globus identities without
+  any manual token sharing
+- Parameter schemas are extracted automatically from partner Python docstrings (Google
+  `Args:` and Sphinx `:param:` styles), so the LLM receives fully typed, described tool
+  signatures with no extra configuration from the partner
+- Method naming determines how AISAC treats the agent: methods ending in `_agent` are
+  surfaced as first-class helper agents that the Planner can delegate to; all others are
+  surfaced as tools callable mid-task by helpers
+- Long-call timeout (2 hours) accommodates HPC-backed agents with heavy compute jobs
+
+- `invoke_mcp_agent` — call any Academy-registered agent or tool by name with typed params
 
 ---
 
@@ -204,8 +225,23 @@ lets users browse and resume past sessions backed by the SQLite store.
 | Linux / HPC login node | Terminal launcher + SSH tunnel |
 | Air-gapped | `OFFLINE_MODE` — local models, no outbound calls |
 
-**LLM providers** (all behind a unified `call_llm()` with probing and failover):
-Argo Legacy/Public (ANL), ALCF Sophia, OpenAI, AMSC (via LiteLLM), local models.
+**LLM endpoints** — AISAC is provider-agnostic. All endpoints share a unified `call_llm()`
+interface with automatic probing, capability detection, fallback chains, configurable
+timeouts (180s default), and exponential backoff retry (3 attempts):
+
+| Endpoint | Details | Auth |
+|---|---|---|
+| **Argo Legacy** | `inference.cels.anl.gov` — ANL production Argo API | Argonne username |
+| **Argo Public** | `api.argo.cels.anl.gov` — OpenAI-compatible Argo endpoint | Argonne username |
+| **ALCF Sophia** | `inference-api.alcf.anl.gov` — Aurora/Sunspot models | Globus PKCE (no stored secrets) |
+| **AMSC i2** | American Science Cloud inference infrastructure, proxied via LiteLLM | AMSC API key |
+| **OpenAI** | OpenAI Platform or Azure OpenAI | API key |
+| **Local** | Any OpenAI-compatible server (vLLM, LMStudio, Ollama) — full offline mode | None / configurable |
+
+Chat and embedding endpoints are configured independently with separate preference order
+and fallback chains — a project can use Argo for chat and ALCF Sophia for embeddings, for
+example. FAISS indices are namespaced by embedding endpoint + model to prevent
+cross-contamination when switching providers.
 
 **Auth:** Globus PKCE flow for ALCF — no stored secrets.
 
