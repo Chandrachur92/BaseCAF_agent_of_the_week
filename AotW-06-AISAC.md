@@ -97,8 +97,25 @@ execute tools and return structured results. This separation enforces traceabili
 prevents uncontrolled tool use by reasoning agents.
 
 Safety limits are hard-enforced: `MAX_TURNS=8`, `MAX_TOOL_ROUNDS=80` (soft warn at 70),
-`MAX_DRIVER_DEPTH=2`. Context is monitored continuously: RAG is tapered at 70% utilization
-and execution halts at 95%.
+`MAX_DRIVER_DEPTH=2`.
+
+**Context management** is a first-class concern across every layer of AISAC. Token usage is
+tracked continuously per agent and surfaced live in the UI as a runtime banner. The system
+operates in three stages:
+
+| Stage | Threshold | Behavior |
+|---|---|---|
+| **Taper** | 70% of context limit | RAG retrieval is reduced; chunk counts and result sizes are trimmed to preserve headroom |
+| **Warn** | 80% (configurable) | A direct warning is injected into the agent's message list instructing it to wrap up immediately and not start new steps |
+| **Hard stop** | 95% | Tool calls are stripped from the agent's schema; the agent must return whatever it has |
+
+If a helper cannot complete its task within budget, it escalates the remaining work back to
+the Planner with full context rather than returning partial results silently. Past
+conversation history is loaded under a separate 10,000-token budget so long sessions never
+crowd out the active task. Tool results are capped at 80% of the available context window
+(~3.5 chars per token) to ensure the model always has room to reason and respond. The shared
+Blackboard further decouples agent contexts — intermediate findings are written there rather
+than passed through agent prompts, preventing prompt inflation across multi-step workflows.
 
 <p align="center">
   <img src="images/06-AISAC/aisac_depth_model.png" width="80%" alt="AISAC Depth Model">
