@@ -219,10 +219,23 @@ lets users browse and resume past sessions backed by the SQLite store.
 
 ### Deployment & Extensibility
 
+**AISAC Manager — Desktop Launcher (Windows / macOS / Linux)**
+
+Getting started requires no terminal knowledge. A single installer file (`install_aisac_manager.bat` on Windows, `install_aisac_manager.sh` on macOS/Linux) auto-discovers Python, clones the repository, creates a virtual environment, installs all dependencies, and places an **AISAC Manager** shortcut on the Desktop — in one step.
+
+From AISAC Manager, researchers can:
+- Create new projects via a **5-step guided wizard** (location, credentials, endpoint preferences, knowledge base folders, feature toggles) — no config file editing required
+- Launch any project into its own **native application window** (pywebview/WebView2)
+- Run **multiple projects simultaneously**, each on its own auto-assigned port
+- Manage credentials centrally (Argo username, AMSC API key) — injected into all projects automatically
+- Check for and apply updates with a single click
+
+For HPC and cluster environments, a terminal launcher + SSH tunnel provides the same Gradio interface remotely. Air-gapped deployments are supported via `OFFLINE_MODE` (local models, no outbound calls).
+
 | Environment | How |
 |---|---|
-| Windows / macOS desktop | AISAC Manager (tkinter + pywebview) — native window per project |
-| Linux / HPC login node | Terminal launcher + SSH tunnel |
+| Windows / macOS / Linux desktop | AISAC Manager — one installer, native window per project |
+| Linux / HPC login node | Terminal launcher + SSH tunnel to local browser |
 | Air-gapped | `OFFLINE_MODE` — local models, no outbound calls |
 
 **LLM endpoints** — AISAC is provider-agnostic. All endpoints share a unified `call_llm()`
